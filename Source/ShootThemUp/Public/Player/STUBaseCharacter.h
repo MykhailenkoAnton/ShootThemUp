@@ -8,6 +8,8 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class USTUHealthComponent;
+class UTextRenderComponent;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
@@ -16,12 +18,18 @@ class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
 
 public:
 	// Sets default values for this character's properties
-	ASTUBaseCharacter();
+	ASTUBaseCharacter(const FObjectInitializer &ObjInit);
 
 protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UCameraComponent *CameraComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+    USTUHealthComponent *HeathComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+    UTextRenderComponent *HeathTextComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USpringArmComponent *SpringArmComponent;
@@ -36,7 +44,17 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-private:
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+    bool IsRunning() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+    float GetMovementDirection() const;
+
+  private:
+
+	bool WantsToRun = false;
+
+	bool IsMovingForwarnd = false;
 
     void MoveForward(float Amount);
 
@@ -45,4 +63,10 @@ private:
 	void LookUp(float Amount);
 
 	void TurnAround(float Amount);
+
+	void OnStartRunning();
+
+	void OnStopRunning();
+
+	
 };
