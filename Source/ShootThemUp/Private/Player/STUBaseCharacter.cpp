@@ -47,9 +47,6 @@ void ASTUBaseCharacter::Tick(float DeltaTime)
 
     const auto Heath = HeathComponent->GetHeath();
     HeathTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Heath)));
-
-    TakeDamage(0.1f, FDamageEvent{}, Controller, this);
-
 }
 
 // Called to bind functionality to input
