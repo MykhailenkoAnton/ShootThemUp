@@ -38,15 +38,18 @@ void ASTUBaseCharacter::BeginPlay()
 	
     check(HeathTextComponent);
     check(HeathComponent);
+    check(GetCharacterMovement());
+
+    OnHeathChanged(HeathComponent->GetHeath());
+    HeathComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
+    HeathComponent->OnHeathChanged.AddUObject(this, &ASTUBaseCharacter::OnHeathChanged);
 }
 
 // Called every frame
 void ASTUBaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-    const auto Heath = HeathComponent->GetHeath();
-    HeathTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Heath)));
+    
 }
 
 // Called to bind functionality to input
@@ -122,4 +125,20 @@ void ASTUBaseCharacter::OnStartRunning()
 void ASTUBaseCharacter::OnStopRunning()
 {
     WantsToRun = false;
+}
+
+void ASTUBaseCharacter::OnDeath()
+{
+    UE_LOG(BaseCharacterLog, Display, TEXT("Player %s is dead: "), *GetName())
+
+    PlayAnimMontage(DeathAnimMontage);
+
+    GetCharacterMovement()->DisableMovement();
+
+    SetLifeSpan(5.0f);
+}
+
+void ASTUBaseCharacter::OnHeathChanged(float Heath)
+{
+    HeathTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Heath)));
 }

@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "4.26",
+	"EngineAssociation": "{0CD8F6D8-4050-D0E2-29B2-B0863B5BF9DE}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -11,6 +11,12 @@
 			"AdditionalDependencies": [
 				"Engine"
 			]
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "HoudiniEngine",
+			"Enabled": true
 		}
 	]
 }

@@ -3,8 +3,7 @@
 
 #include "Components/STUHealthComponent.h"
 #include "GameFramework/Actor.h"
-#include "Dev/STUFireDamageType.h"
-#include "Dev/STUIceDamageType.h"
+
 
 DEFINE_LOG_CATEGORY_STATIC(LogHeathComponent, All, All)
 
@@ -25,6 +24,7 @@ void USTUHealthComponent::BeginPlay()
 	Super::BeginPlay();
 
 	Health = MaxHeath;
+    OnHeathChanged.Broadcast(Health);
 	// ...
 	
 	AActor *ComponentOwner = GetOwner();
@@ -37,19 +37,16 @@ void USTUHealthComponent::BeginPlay()
 void USTUHealthComponent::OnTakeAnyDamageHandle(AActor *DamagedActor, float Damage, const class UDamageType *DamageType,
                                               class AController *InstigatedBy, AActor *DamageCauser)
 {
-    Health -= Damage;
-
-	UE_LOG(LogHeathComponent, Display, TEXT("Damage: %f"), Damage);
-
-	if (DamageType)
+    if (Damage <= 0.0f || IsDead())
     {
-        if (DamageType->IsA<USTUFireDamageType>())
-        {
-            UE_LOG(LogHeathComponent, Display, TEXT("RED!"));
-        }
-        else if (DamageType->IsA<USTUIceDamageType>())
-        {
-            UE_LOG(LogHeathComponent, Display, TEXT("BLUE!"));
-        }
+        return;
+	}
+
+    Health = FMath::Clamp(Health - Damage, 0.0f, MaxHeath);
+    OnHeathChanged.Broadcast(Health);
+
+	if (IsDead())
+    {
+        OnDeath.Broadcast();
     }
 }

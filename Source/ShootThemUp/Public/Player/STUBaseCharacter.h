@@ -34,6 +34,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USpringArmComponent *SpringArmComponent;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+    UAnimMontage *DeathAnimMontage;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -68,5 +71,8 @@ public:
 
 	void OnStopRunning();
 
+	void OnDeath();
+
+	void OnHeathChanged(float Heath);
 	
 };
