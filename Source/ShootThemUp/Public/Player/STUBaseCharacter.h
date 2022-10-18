@@ -37,6 +37,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
     UAnimMontage *DeathAnimMontage;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+    FVector2D LendedDamageVelocity = FVector2D(900.0f, 1200.0f);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+    FVector2D LendedDamage = FVector2D(10.0f, 100.0f);
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -74,5 +80,8 @@ public:
 	void OnDeath();
 
 	void OnHeathChanged(float Heath);
+
+	UFUNCTION()
+    void OnGroundLanded(const FHitResult &Hit);
 	
 };

@@ -44,6 +44,8 @@ void ASTUBaseCharacter::BeginPlay()
     OnHeathChanged(HeathComponent->GetHeath());
     HeathComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
     HeathComponent->OnHeathChanged.AddUObject(this, &ASTUBaseCharacter::OnHeathChanged);
+
+    LandedDelegate.AddDynamic(this, &ASTUBaseCharacter::OnGroundLanded);
 }
 
 // Called every frame
@@ -147,4 +149,21 @@ void ASTUBaseCharacter::OnDeath()
 void ASTUBaseCharacter::OnHeathChanged(float Heath)
 {
     HeathTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Heath)));
+}
+
+void ASTUBaseCharacter::OnGroundLanded(const FHitResult &Hit)
+{
+    const auto FallVelocityZ = -GetCharacterMovement()->Velocity.Z;
+    UE_LOG(BaseCharacterLog, Display, TEXT("On lended: %f"), FallVelocityZ);
+
+    if (FallVelocityZ < LendedDamageVelocity.X)
+    {
+        return;
+    }
+
+    const auto FinalDamage = FMath::GetMappedRangeValueClamped(LendedDamageVelocity, LendedDamage, FallVelocityZ);
+
+    UE_LOG(BaseCharacterLog, Display, TEXT("FinalDamage: %f"), FinalDamage);
+
+    TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr);
 }
